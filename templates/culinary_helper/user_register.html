@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ title }} Registration {{ block.super }} {% endblock %}
+
+{% block content %}
+
+
+    <div class="container">
+        <h1>Register</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div>
+                {% for message in messages %}
+                    <br>
+                    <div class="card">
+                        <div class="card-body">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" name="username">
+            </div>
+            <div class="mb-3">
+                <label for="Email" class="form-label">Email address</label>
+                <input type="email" class="form-control" id="Email" aria-describedby="emailHelp" name="email">
+                <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+            </div>
+            <div class="mb-3">
+                <label for="Password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password" name="password">
+            </div>
+            <div class="mb-3">
+                <label for="Password2" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password2" name="password2">
+            </div>
+            <button type="submit" class="btn btn-primary">Register</button>
+            <div>
+                <p> Do you have an account? <a href="{% url 'login' %}"> Login </a></p>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}

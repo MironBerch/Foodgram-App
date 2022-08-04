@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ title }} Login {{ block.super }} {% endblock %}
+
+{% block content %}
+
+
+    <div class="container">
+        <h1>Login</h1>
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div>
+                {% for message in messages %}
+                    <br>    
+                    <div class="card">
+                        <div class="card-body">
+                            {{ message }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <br>
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" aria-describedby="usernameHelp" name="username">
+            </div>
+            <div class="mb-3">
+                <label for="Password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="Password" name="password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+            <div>
+                <p> Not registered? <a href="{% url 'register' %}"> Create a account </a></p>
+            </div>
+        </form>
+    </div>
+
+
+{% endblock %}
