@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 import uuid
 from datetime import datetime
 from django.urls import reverse
+from django import forms
 
 
 class Profile(models.Model):
@@ -13,13 +14,17 @@ class Profile(models.Model):
         ('female', 'female')
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    user_id = models.IntegerField()
-    user_gender = models.CharField(max_length=6, choices=GENDER, dedault='male')
+    id_user = models.IntegerField()
+    user_gender = models.CharField(max_length=6, choices=GENDER, default='male')
     user_about = models.TextField(blank=True, null=True)
     user_avatar = models.ImageField(upload_to='profile_avatars/', default='default_avatar.png')
 
     def __str__(self):
         return self.user.username
+
+    class Meta:
+        verbose_name = 'Профиль'
+        verbose_name_plural = 'Профиля'
 
 
 class Follower(models.Model):
@@ -30,6 +35,9 @@ class Follower(models.Model):
     def __str__(self):
         return self.user
 
+    class Meta:
+        verbose_name = 'Подписчик'
+        verbose_name_plural = 'Подписчики'
 
 class Recipe(models.Model):
     """Модель рецепта"""
@@ -43,10 +51,10 @@ class Recipe(models.Model):
         ('normal', 'normal'),
         ('hard', 'hard')
     )
-    title = models.CharField(max_lengt=100)
+    title = models.CharField(max_length=100)
     user = models.CharField(max_length=50)
-    url = models.SlugField(max_lengt=100, unique=True)
-    preview = models.CharField(upload_to='preview/')
+    url = models.SlugField(max_length=100, unique=True)
+    preview = models.ImageField(upload_to='preview/')
     #preview_text = models.CharField(max_length=255, blank=True)
     text = models.TextField()
     type = models.CharField(max_length=5, choices=TYPE_OF_DISH, default='full')
@@ -58,7 +66,7 @@ class Recipe(models.Model):
         return self.user
 
     def get_absolute_url(self):
-        return reverse("recipe_detail", kwargs={"slug": self.url})
+        return reverse('recipe_detail', kwargs={'slug': self.url})
 
     def get_review(self):
         return self.recipereviews_set.filter(parent__isnull=True)
@@ -71,15 +79,19 @@ class Recipe(models.Model):
 class LoveRecipe(models.Model):
     '''Модель отметки понравилось'''
     recipe_url = models.CharField(max_length=100)
-    username = models.CharField(max_lengt=100)
+    username = models.CharField(max_length=100)
 
     def __str__(self):
         return self.username
 
+    class Meta:
+        verbose_name = 'Отметка нравится'
+        verbose_name_plural = 'Отметки нравится'
+
 
 class RecipeReviews(models.Model):
     """Модель комментария к рецепту"""
-    recipe = models.ForeignKey(Recipe, verbose_name='Рецепт')
+    recipe = models.ForeignKey(Recipe, verbose_name='Рецепт', on_delete=models.CASCADE)
     username = models.CharField(max_length=100)
     text = models.TextField(max_length=550)
     parent = models.ForeignKey('self', verbose_name='Родитель', on_delete=models.SET_NULL, blank=True, null=True)
