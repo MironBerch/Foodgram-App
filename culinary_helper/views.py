@@ -64,7 +64,7 @@ def logout(request):
 
 
 @login_required(login_url='login')
-def edit_profile(request):
+def profile_edit(request):
     """Изменение профиля пользователя"""
     try:
         user_profile = Profile.objects.get(user=request.user)
@@ -80,17 +80,21 @@ def edit_profile(request):
             about = request.POST['about']
             gender = request.POST['gender']
 
-            save_profile_changes(context, user_profile, avatar, about, gender)
+            save_profile_changes(user_profile, avatar, about, gender)
 
         if request.FILES.get('avatar') != None:
             avatar = request.FILES.get('avatar')
             about = request.POST['about']
             gender = request.POST['gender']
 
-            save_profile_changes(context, avatar, about, gender)
+            save_profile_changes(user_profile, avatar, about, gender)
 
         messages.info(request, 'Settings save')
         return redirect('settings')
         
 
-    return render(request, 'culinary_helper/profile/edit.html', context)
+    return render(request, 'culinary_helper/profile/settings.html', context)
+
+
+#@login_required(login_url='login')
+#def profile_view(request):

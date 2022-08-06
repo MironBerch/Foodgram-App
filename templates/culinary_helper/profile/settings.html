@@ -31,12 +31,15 @@
                     <label for="about" class="form-label">About me:</label>
                     <textarea id="about" name="about" class="form-control">{{user_profile.about}}</textarea>
                 </div>
-
-                <div class="mb-3">
-                    <label for="status" class="form-label">Status:</label>
-                    <textarea id="status" name="status" class="form-control">{{user_profile.status}}</textarea>
-                </div>
             </div>
+            <select name="gender" class="form-select" aria-label="Default select example">
+                <option value="male">Male</option>
+                {% if user_profile.gender == "female" %}
+                <option value="female" selected>Female</option>
+                {% else %}
+                <option value="female">Female</option>
+                {% endif %}
+            </select>
             <span>
                 <button> <a href="/">Cancel</a></button>
                 <button type="submit"> Save </button>

@@ -19,9 +19,9 @@ def registration_user_and_profile(request, username: str, email: str, password: 
     new_profile.save()
 
 
-def save_profile_changes(context, avatar, about: str, gender):
+def save_profile_changes(user_profile, avatar, about: str, gender):
     """Сохранение данных профиля пользователя"""
-    context.user_profile.avatar = avatar 
-    context.user_profile.about = about
-    context.user_profile.gender = gender
-    context.user_profile.save()
+    user_profile.avatar = avatar 
+    user_profile.about = about
+    user_profile.gender = gender
+    user_profile.save()
