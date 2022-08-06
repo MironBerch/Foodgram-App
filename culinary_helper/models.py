@@ -39,6 +39,7 @@ class Follower(models.Model):
         verbose_name = 'Подписчик'
         verbose_name_plural = 'Подписчики'
 
+
 class Recipe(models.Model):
     """Модель рецепта"""
     TYPE_OF_DISH = (
@@ -51,9 +52,10 @@ class Recipe(models.Model):
         ('normal', 'normal'),
         ('hard', 'hard')
     )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField(max_length=100)
     user = models.CharField(max_length=50)
-    url = models.SlugField(max_length=100, unique=True)
+    #url = models.SlugField(max_length=100, unique=True)
     preview = models.ImageField(upload_to='preview/')
     #preview_text = models.CharField(max_length=255, blank=True)
     text = models.TextField()
@@ -65,8 +67,8 @@ class Recipe(models.Model):
     def __str__(self):
         return self.user
 
-    def get_absolute_url(self):
-        return reverse('recipe_detail', kwargs={'slug': self.url})
+    #def get_absolute_url(self):
+    #    return reverse('recipe_detail', kwargs={'slug': self.url})
 
     def get_review(self):
         return self.recipereviews_set.filter(parent__isnull=True)

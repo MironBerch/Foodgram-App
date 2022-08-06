@@ -2,7 +2,70 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth import authenticate
-#from .models import
+from .models import *
 from django.contrib.auth.decorators import login_required
+from .services import *
+from django.http import Http404
 
 
+def register(request):
+    """Функция регистрации пользователя и профиля пользователя"""
+    if request.method == 'POST':
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
+        password2 = request.POST['password2']
+
+        if password == password2:
+            if User.objects.filter(email=email).exists():
+                messages.info(request, 'Почта занята')
+                return redirect('register')
+
+            elif User.objects.filter(username=username).exists():
+                messages.info(request, 'Имя пользователя занято')
+                return redirect('register')
+            
+            else:
+                registration_user_and_profile(request, username, email, password)
+                return redirect(login)
+
+        else:
+            messages.info(request, 'Пароль не подходит')
+            return redirect('register')
+    
+    else:
+        return render(request, 'culinary_helper/user/register.html')
+
+
+def login(request):
+    """Вход в аккаунт"""
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = auth.authenticate(username=username, password=password)
+
+        if user is not None:
+            auth.login(request, user)
+            return redirect('/')
+
+        else:
+            messages.info(request, 'Не правильная почта или пароль')
+            return redirect('login')
+
+    else:
+        return render(request, 'culinary_helper/user/login.html')
+
+
+@login_required(login_url=login)
+def logout(request):
+    """Выход из аккаунта"""
+    auth.logout(request)
+    return redirect('login')
+
+
+@login_required(login_url=login)
+def edit_profile(request):
+    search_profile(request)
+    if request.method == 'POST':
+        if request.FILES.get('user_avatar'):
+            
