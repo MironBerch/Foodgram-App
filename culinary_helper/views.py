@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from .models import *
 from django.contrib.auth.decorators import login_required
-from .services import *
+from .services import registration_user_and_profile, save_profile_changes
 from django.http import Http404
 
 
@@ -56,16 +56,41 @@ def login(request):
         return render(request, 'culinary_helper/user/login.html')
 
 
-@login_required(login_url=login)
+@login_required(login_url='login')
 def logout(request):
     """Выход из аккаунта"""
     auth.logout(request)
     return redirect('login')
 
 
-@login_required(login_url=login)
+@login_required(login_url='login')
 def edit_profile(request):
-    search_profile(request)
+    """Изменение профиля пользователя"""
+    try:
+        user_profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        raise Http404
+    context = {
+        'user_profile': user_profile
+    }
+
     if request.method == 'POST':
-        if request.FILES.get('user_avatar'):
-            
+        if request.FILES.get('avatar') == None:
+            avatar = user_profile.avatar
+            about = request.POST['about']
+            gender = request.POST['gender']
+
+            save_profile_changes(context, user_profile, avatar, about, gender)
+
+        if request.FILES.get('avatar') != None:
+            avatar = request.FILES.get('avatar')
+            about = request.POST['about']
+            gender = request.POST['gender']
+
+            save_profile_changes(context, avatar, about, gender)
+
+        messages.info(request, 'Settings save')
+        return redirect('settings')
+        
+
+    return render(request, 'culinary_helper/profile/edit.html', context)

@@ -15,9 +15,9 @@ class Profile(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_user = models.IntegerField()
-    user_gender = models.CharField(max_length=6, choices=GENDER, default='male')
-    user_about = models.TextField(blank=True, null=True)
-    user_avatar = models.ImageField(upload_to='profile_avatars/', default='default_avatar.png')
+    gender = models.CharField(max_length=6, choices=GENDER, default='male')
+    about = models.TextField(blank=True, null=True)
+    avatar = models.ImageField(upload_to='profile_avatars/', default='default_avatar.png')
 
     def __str__(self):
         return self.user.username
