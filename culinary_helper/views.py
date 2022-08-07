@@ -4,9 +4,8 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from .models import *
 from django.contrib.auth.decorators import login_required
-from .services import registration_user_and_profile, save_profile_changes
+from .services import registration_user_and_profile, save_profile_changes, processing_subscription_form
 from django.http import Http404
-from django.views.generic import ListView, DetailView
 from django.db.models import F
 
 
@@ -92,7 +91,7 @@ def profile_edit(request):
             save_profile_changes(user_profile, avatar, about, gender)
 
         messages.info(request, 'Settings save')
-        return redirect('settings')
+        return redirect('profile_settings')
         
 
     return render(request, 'culinary_helper/profile/settings.html', context)
@@ -116,5 +115,45 @@ def recipe_create(request):
     return render(request, 'culinary_helper/recipe/create.html')
 
 
-#def profile_view(request):
-#    user_object = 
+@login_required(login_url='login')
+def profile_view(request, pk):
+    user_object = User.objects.get(username=pk)
+    user_profile = Profile.objects.get(user=user_object)
+    user_recipe = Recipe.objects.filter(user=pk)
+    user_recipe_quantity = len(user_recipe)
+
+    follower = request.user.username
+    user = pk
+
+    if Follower.objects.filter(follower=follower, user=user).first():
+        user_follow_button = 'Unfollow'
+    else:
+        user_follow_button = 'Follow'
+
+    user_following = len(Follower.objects.filter(follower=pk))
+    user_followers = len(Follower.objects.filter(user=pk))
+
+    context = {
+        'user_object': user_object,
+        'user_profile': user_profile,
+        'user_recipe': user_recipe,
+        'user_recipe_quantity': user_recipe_quantity,
+        'user_follow_button': user_follow_button,
+        'user_following': user_following,
+        'user_followers': user_followers,
+    }
+
+    return render(request, 'culinary_helper/profile/view.html', context)
+
+
+@login_required(login_url='login')
+def profile_follow(request):
+    if request.method == 'POST':
+        follower = request.POST['follower']
+        user = request.POST['user']
+
+        processing_subscription_form(follower, user)
+        return redirect('/profile/view/' + user)
+
+    else:
+        return redirect('/')

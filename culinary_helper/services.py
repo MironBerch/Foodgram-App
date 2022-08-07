@@ -26,12 +26,21 @@ def save_profile_changes(user_profile, avatar, about: str, gender):
     user_profile.gender = gender
     user_profile.save()
 
-def search_user_profile_object():
-    try:
-        user_profile = Profile.objects.get(user=request.user)
-    except Profile.DoesNotExist:
-        raise Http404
-    context = {
-        'user_profile': user_profile
-    }
-    return context
+
+def collecting_profile_information(request, pk):
+    user_object = User.objects.get(username=pk)
+    user_profile = Profile.objects.get(user=user_object)
+    user_recipe = Recipe.objects.filter(user=pk)
+    user_recipe_quantity = len(user_recipe)
+    return user_object, user_profile, user_recipe, user_recipe_quantity
+
+
+def processing_subscription_form(follower:str, user:str):
+    """Обработка формы подписки на профиль"""
+    if Follower.objects.filter(follower=follower, user=user).first():
+        delete_follower = Follower.objects.get(follower=follower, user=user)
+        delete_follower.delete()
+
+    else:
+        new_follower = Follower.objects.create(follower=follower, user=user)
+        new_follower.save()
