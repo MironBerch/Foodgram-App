@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.contrib.auth import authenticate
@@ -6,6 +6,8 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from .services import registration_user_and_profile, save_profile_changes
 from django.http import Http404
+from django.views.generic import ListView, DetailView
+from django.db.models import F
 
 
 def register(request):
@@ -96,5 +98,23 @@ def profile_edit(request):
     return render(request, 'culinary_helper/profile/settings.html', context)
 
 
-#@login_required(login_url='login')
+@login_required(login_url='login')
+def recipe_create(request):
+    if request.method == 'POST':
+        user = request.user.username
+        title = request.POST['title']
+        preview = request.FILES.get('preview')
+        text = request.POST['text']
+        type = request.POST['type']
+        complexity = request.POST['complexity']
+
+        recipe = Recipe.objects.create(user=user, title=title, preview=preview, text=text, type=type, complexity=complexity)
+        recipe.save()
+
+        return redirect('/')
+    
+    return render(request, 'culinary_helper/recipe/create.html')
+
+
 #def profile_view(request):
+#    user_object = 

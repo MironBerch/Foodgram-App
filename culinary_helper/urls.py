@@ -7,5 +7,6 @@ urlpatterns = [
     path('user/login/', login, name='login'),
     path('user/logout', logout, name='logout'),
     path('profile/settings/', profile_edit, name='settings'),
-    #path('profile/view/<int:id>', profile_view, name='view')
+    #path('profile/view/<int:id>', profile_view, name='view'),
+    path('recipe/create/', recipe_create, name='recipe_create')
 ]

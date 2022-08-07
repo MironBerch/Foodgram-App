@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <img src="{{ user_profile.avatar.url }}" style="width:225px; height:350px">
+        <h2>Profile - {{ user_profile.user.username }}</h2>
+        <span>
+            <form action="{% url 'follow' %}" method="POST">
+                {% csrf_token %}
+                <input type='hidden' value="{{user.username}}" name="follower">
+                <input type='hidden' value="{{user_object.username}}" name="user">
+                {% if user_object.username == user.username %}
+                <a href="{% url 'settings' %}">Settings</a>
+                {% else %}
+                <a data-ripple=""><button type="submit" class="btn btn-primary">{{ button_text }}</button></a>
+                {% endif%}
+            </form>
+
+            <span>
+                <p>
+                    About me: {{ user_profile.about }}
+                </p>
+                <span>Status:{{ user_profile.status }}</span> ||
+                {% if user_post_length == 0 %}
+                    <span>No posts</span> ||
+                {% elif user_post_length == 1 %}
+                    <span>{{ user_post_length }} Post</span> ||
+                {% else %}
+                    <span>{{ user_post_length }} Posts</span> ||
+                {% endif %}
+
+                {% if user_following == 0 or user_following == 1 %}
+                    <span>{{ user_following }} follow</span>
+                {% else %}
+                    <span>{{ user_following }} following    </span>
+                {% endif %}
+
+                {% if user_followers == 0 or user_followers == 1 %}
+                    <span>{{ user_followers }} follower</span>
+                {% else %}
+                    <span>{{ user_followers }} followers</span>
+                {% endif %}
+
+            </span>
+        </span>
+        <hr>
+
+        {% if user_post_length > 0 %}
+            <div>
+                {% for post in user_posts %}
+
+                    <div class="card" style="width: 48rem;">
+                        {% if post.image %}
+                            <a href="{{ post.image.url }}"><img class="card-img-top" src="{{ post.image.url }}"></a>
+                        {% endif %}
+                        <div class="card-body">
+                            {% if post.text %}
+                                <p class="card-text">{{ post.text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

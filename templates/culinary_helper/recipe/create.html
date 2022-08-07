@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h2>Create recipe</h2>
+
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div>
+                <div>
+                    <span><h3>Post by:{{ user }}</h3></span>
+                </div>
+                <div>
+                    <label for="title" class="form-label">Recipe name</label>
+                    <input type='text' class="form-control" id="title" name='title'>
+                </div>
+                <div>
+                    <label for="">Preview</label>
+                    <input type="file" name="preview" value="">
+                </div>
+                <div>
+                    <label for="text">Recipe text</label>  
+                    <textarea id="text" name="text" class="form-control"></textarea>
+                </div> 
+            </div>
+
+            <select name="type" class="form-select" aria-label="Default select example">
+                <option value='full'>full</option>
+                {% if recipe.type == 'snack' %}
+                <option value='snack' selected>snack</option>
+                {% else %}
+                <option value='snack'>snack</option>
+                {% endif %}
+                {% if recipe.type == 'drink' %}
+                <option value='drink' selected>drink</option>
+                {% else %}
+                <option value='drink'>drink</option>
+                {% endif %}
+            </select>
+
+            <select name="complexity" class="form-select" aria-label="Default select example">
+                <option value='normal'>normal</option>
+                {% if recipe.type == 'easy' %}
+                <option value='easy' selected>easy</option>
+                {% else %}
+                <option value='easy'>easy</option>
+                {% endif %}
+                {% if recipe.type == 'hard' %}
+                <option value='hard' selected>hard</option>
+                {% else %}
+                <option value='hard'>hard</option>
+                {% endif %}
+            </select>
+
+            <span>
+                <button> <a href="/">Cancel</a> </button>
+                <button type="submit"> Post recipe </button>
+            </span>
+        </form>
+    </div>
+{% endblock %}

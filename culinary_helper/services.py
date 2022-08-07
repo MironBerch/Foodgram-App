@@ -25,3 +25,13 @@ def save_profile_changes(user_profile, avatar, about: str, gender):
     user_profile.about = about
     user_profile.gender = gender
     user_profile.save()
+
+def search_user_profile_object():
+    try:
+        user_profile = Profile.objects.get(user=request.user)
+    except Profile.DoesNotExist:
+        raise Http404
+    context = {
+        'user_profile': user_profile
+    }
+    return context
