@@ -3,12 +3,10 @@
 
 {% block content %}
     <div class="container">
-        <h1>Home</h1>
-        <h5>name:{{ user }}</h5>
-        <img width="300" height="350" src="{{user_profile.avatar.url}}">
         <hr>
         <h3>Recipes</h3>
         {% for recipe in recipes %}
+            <a href="/recipe/detail_view?recipe_id={{recipe.id}}" class="btn btn-primary">Href</a>
             <br>
             <div class="card" style="width: 48rem;">
                 <div class="card-footer">

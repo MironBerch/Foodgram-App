@@ -12,4 +12,5 @@ urlpatterns = [
     path('profile/view/<str:pk>', profile_view, name='profile_view'),
     path('profile_follow/', profile_follow, name='profile_follow'),
     path('recipe/feed/', recipe_feed, name='recipe_feed'),
+    path('recipe/detail_view/', recipe_detail_view, name='recipe_detail_view'),
 ]

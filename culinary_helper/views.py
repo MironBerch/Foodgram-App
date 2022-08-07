@@ -197,4 +197,4 @@ def recipe_detail_view(request):
         'recipe': recipe,
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'culinary_helper/recipe/detail_view.html', context)

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>{{ recipe.title }}</h2>
+<div>
+    <div>
+        <span>Title: {{ recipe.title }}</span>
+        <span>User: {{ recipe.user }}</span>
+        <span>Type: {{ recipe.type }}</span>
+        <span>Level: {{ recipe.complexity }}</span>
+        <hr>
+        <img src='{{ recipe.preview.url }}'>
+        <p>{{ recipe.text }}</p>
+    </div>
+</div>
+
+{% endblock %}
