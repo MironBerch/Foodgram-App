@@ -4,9 +4,10 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from .models import *
 from django.contrib.auth.decorators import login_required
-from .services import registration_user_and_profile, save_profile_changes, processing_subscription_form
+from .services import registration_user_and_profile, save_profile_changes, processing_subscription_form, collecting_profile_information
 from django.http import Http404
 from django.db.models import F
+from itertools import chain
 
 
 def register(request):
@@ -117,30 +118,18 @@ def recipe_create(request):
 
 @login_required(login_url='login')
 def profile_view(request, pk):
-    user_object = User.objects.get(username=pk)
-    user_profile = Profile.objects.get(user=user_object)
-    user_recipe = Recipe.objects.filter(user=pk)
-    user_recipe_quantity = len(user_recipe)
+    #context = collecting_profile_information(request, pk)
 
-    follower = request.user.username
-    user = pk
-
-    if Follower.objects.filter(follower=follower, user=user).first():
-        user_follow_button = 'Unfollow'
-    else:
-        user_follow_button = 'Follow'
-
-    user_following = len(Follower.objects.filter(follower=pk))
-    user_followers = len(Follower.objects.filter(user=pk))
+    profile_info_objects = collecting_profile_information(request, pk)
 
     context = {
-        'user_object': user_object,
-        'user_profile': user_profile,
-        'user_recipe': user_recipe,
-        'user_recipe_quantity': user_recipe_quantity,
-        'user_follow_button': user_follow_button,
-        'user_following': user_following,
-        'user_followers': user_followers,
+        'user_object': profile_info_objects[0],
+        'user_profile': profile_info_objects[1],
+        'user_recipe': profile_info_objects[2],
+        'user_recipe_quantity': profile_info_objects[3],
+        'user_follow_button': profile_info_objects[4],
+        'user_following': profile_info_objects[5],
+        'user_followers': profile_info_objects[6],
     }
 
     return render(request, 'culinary_helper/profile/view.html', context)
@@ -157,3 +146,55 @@ def profile_follow(request):
 
     else:
         return redirect('/')
+
+
+@login_required(login_url='login')
+def recipe_feed(request):
+    #feed = []
+    #user_object = User.objects.get(username=request.user.username)
+    #user_profile = Profile.objects.get(user=user_object)
+    #user_following = Follower.objects.filter(follower=request.user.username)
+    #recipe_list = Recipe.objects.all()
+    #for recipe in recipe_list:
+        #feed_lists = Post.objects.filter(user=usernames)
+    #    feed.append(recipe)
+    #feed_list = list(chain(*feed))
+    #recipes = Recipe.objects.all()
+    #feed_list = list(chain(*recipes))
+    #context = {
+    #    'user_profile': user_profile,
+    #    'recipes': feed_list,
+    #}
+    user_object = User.objects.get(username=request.user.username)
+    user_profile = Profile.objects.get(user=user_object)
+    recipes = Recipe.objects.all()
+    context = {
+        'user_profile': user_profile,
+        'recipes': recipes,
+    }
+
+    return render(request, 'culinary_helper/recipe/feed.html', context)
+
+
+def recipe_detail_view(request):
+
+    #Post.objects.filter(author=request.user)
+    #user = User.objects.get(id=1)
+    #Post.objects.filter(author=user)
+    #context = {
+    #    'posts': Post.objects.filter(author=request.user)
+    #}
+    #context = {}
+    #id = request.GET['id']
+    #obj = Recipe.objects.get(id=id)
+    #context["product"] = obj
+
+    username = request.user.username
+    recipe_id = request.GET.get('recipe_id')
+    recipe = Recipe.objects.get(id=recipe_id)
+    
+    context = {
+        'recipe': recipe,
+    }
+
+    return render(request, 'index.html', context)

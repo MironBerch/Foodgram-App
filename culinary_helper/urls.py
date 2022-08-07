@@ -11,4 +11,5 @@ urlpatterns = [
     path('recipe/create/', recipe_create, name='recipe_create'),
     path('profile/view/<str:pk>', profile_view, name='profile_view'),
     path('profile_follow/', profile_follow, name='profile_follow'),
+    path('recipe/feed/', recipe_feed, name='recipe_feed'),
 ]

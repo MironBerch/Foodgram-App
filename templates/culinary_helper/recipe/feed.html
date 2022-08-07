@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <h1>Home</h1>
+        <h5>name:{{ user }}</h5>
+        <img width="300" height="350" src="{{user_profile.avatar.url}}">
+        <hr>
+        <h3>Recipes</h3>
+        {% for recipe in recipes %}
+            <br>
+            <div class="card" style="width: 48rem;">
+                <div class="card-footer">
+                    <span>Post by: {{ recipe.user }}</span>
+                </div>
+                {% if recipe.preview %}
+                    <img src="{{ recipe.preview.url }}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                    {% if recipe.text %}
+                        <p class="card-text">{{ recipe.text }}</p>
+                    {% endif %}
+                </div>
+                <span>type: {{ recipe.type }} | complexity: {{ recipe.complexity }}</span>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

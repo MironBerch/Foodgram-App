@@ -27,12 +27,28 @@ def save_profile_changes(user_profile, avatar, about: str, gender):
     user_profile.save()
 
 
-def collecting_profile_information(request, pk):
+def collecting_profile_information(request, pk) :
+    """Сбор информации профиля"""
     user_object = User.objects.get(username=pk)
     user_profile = Profile.objects.get(user=user_object)
     user_recipe = Recipe.objects.filter(user=pk)
     user_recipe_quantity = len(user_recipe)
-    return user_object, user_profile, user_recipe, user_recipe_quantity
+    
+    follower = request.user.username
+    user = pk
+
+    if Follower.objects.filter(follower=follower, user=user).first():
+        user_follow_button = 'Unfollow'
+    else:
+        user_follow_button = 'Follow'
+
+    user_following = len(Follower.objects.filter(follower=pk))
+    user_followers = len(Follower.objects.filter(user=pk))
+
+    profile_info_list = [user_object, user_profile, user_recipe, user_recipe_quantity, user_follow_button, user_following, user_followers]
+    
+    return profile_info_list 
+
 
 
 def processing_subscription_form(follower:str, user:str):
