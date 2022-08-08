@@ -175,18 +175,29 @@ def recipe_detail_view(request):
 
 
 @login_required(login_url='login')
-def processing_like_mark(request):
+def like_recipe(request):
     username = request.user.username
     recipe_id = request.GET.get('recipe_id')
     recipe = Recipe.objects.get(id=recipe_id)
-    like_filter = LikeRecipe.objects.filter(recipe_id=recipe_id, username=username)
+    like_filter = LikeRecipe.objects.filter(recipe_id=recipe_id, username=username).first()
+
+    context = {
+        'username': username,
+        'recipe_id': recipe_id,
+        'recipe': recipe,
+        'like_filter': like_filter,
+    }
+
     if like_filter == None:
         new_like = LikeRecipe.objects.create(recipe_id=recipe_id, username=username)
         new_like.save()
         recipe.likes = recipe.likes+1
         recipe.save()
+        #return redirect('/recipe/detail_view/?recipe_id' + recipe_id)
+        return render(request, 'culinary_helper/recipe/detail_view.html', context)
     else:
         like_filter.delete()
         recipe.likes = recipe.likes-1
         recipe.save()
-    return redirect('/recipe/view/' + recipe_id)
+        return render(request, 'culinary_helper/recipe/detail_view.html', context)
+        #return redirect('/recipe/detail_view/?recipe_id' + recipe_id)
