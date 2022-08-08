@@ -47,8 +47,7 @@ def collecting_profile_information(request, pk) :
 
     profile_info_list = [user_object, user_profile, user_recipe, user_recipe_quantity, user_follow_button, user_following, user_followers]
     
-    return profile_info_list 
-
+    return profile_info_list
 
 
 def processing_subscription_form(follower:str, user:str):
@@ -60,3 +59,16 @@ def processing_subscription_form(follower:str, user:str):
     else:
         new_follower = Follower.objects.create(follower=follower, user=user)
         new_follower.save()
+
+"""
+def transformation_of_like_form(username, recipe_id, recipe, like_filter):
+    if like_filter == None:
+        new_like = LikeRecipe.objects.create(recipe_id=recipe_id, username=username)
+        new_like.save()
+        recipe.likes = recipe.likes+1
+        recipe.save()
+    else:
+        like_filter.delete()
+        recipe.likes = recipe.likes-1
+        recipe.save()
+"""        

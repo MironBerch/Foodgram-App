@@ -13,4 +13,5 @@ urlpatterns = [
     path('profile_follow/', profile_follow, name='profile_follow'),
     path('recipe/feed/', recipe_feed, name='recipe_feed'),
     path('recipe/detail_view/', recipe_detail_view, name='recipe_detail_view'),
+    path('recipe/like-recipe/', processing_like_mark, name='like-recipe'),
 ]

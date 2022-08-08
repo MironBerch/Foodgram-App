@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate
 from .models import *
 from django.contrib.auth.decorators import login_required
-from .services import registration_user_and_profile, save_profile_changes, processing_subscription_form, collecting_profile_information
+from .services import registration_user_and_profile, save_profile_changes, processing_subscription_form, collecting_profile_information #,transformation_of_like_form
 from django.http import Http404
 from django.db.models import F
 from itertools import chain
@@ -118,7 +118,6 @@ def recipe_create(request):
 
 @login_required(login_url='login')
 def profile_view(request, pk):
-    #context = collecting_profile_information(request, pk)
 
     profile_info_objects = collecting_profile_information(request, pk)
 
@@ -150,21 +149,7 @@ def profile_follow(request):
 
 @login_required(login_url='login')
 def recipe_feed(request):
-    #feed = []
-    #user_object = User.objects.get(username=request.user.username)
-    #user_profile = Profile.objects.get(user=user_object)
-    #user_following = Follower.objects.filter(follower=request.user.username)
-    #recipe_list = Recipe.objects.all()
-    #for recipe in recipe_list:
-        #feed_lists = Post.objects.filter(user=usernames)
-    #    feed.append(recipe)
-    #feed_list = list(chain(*feed))
-    #recipes = Recipe.objects.all()
-    #feed_list = list(chain(*recipes))
-    #context = {
-    #    'user_profile': user_profile,
-    #    'recipes': feed_list,
-    #}
+
     user_object = User.objects.get(username=request.user.username)
     user_profile = Profile.objects.get(user=user_object)
     recipes = Recipe.objects.all()
@@ -176,19 +161,8 @@ def recipe_feed(request):
     return render(request, 'culinary_helper/recipe/feed.html', context)
 
 
+@login_required(login_url='login')
 def recipe_detail_view(request):
-
-    #Post.objects.filter(author=request.user)
-    #user = User.objects.get(id=1)
-    #Post.objects.filter(author=user)
-    #context = {
-    #    'posts': Post.objects.filter(author=request.user)
-    #}
-    #context = {}
-    #id = request.GET['id']
-    #obj = Recipe.objects.get(id=id)
-    #context["product"] = obj
-
     username = request.user.username
     recipe_id = request.GET.get('recipe_id')
     recipe = Recipe.objects.get(id=recipe_id)
@@ -198,3 +172,21 @@ def recipe_detail_view(request):
     }
 
     return render(request, 'culinary_helper/recipe/detail_view.html', context)
+
+
+@login_required(login_url='login')
+def processing_like_mark(request):
+    username = request.user.username
+    recipe_id = request.GET.get('recipe_id')
+    recipe = Recipe.objects.get(id=recipe_id)
+    like_filter = LikeRecipe.objects.filter(recipe_id=recipe_id, username=username)
+    if like_filter == None:
+        new_like = LikeRecipe.objects.create(recipe_id=recipe_id, username=username)
+        new_like.save()
+        recipe.likes = recipe.likes+1
+        recipe.save()
+    else:
+        like_filter.delete()
+        recipe.likes = recipe.likes-1
+        recipe.save()
+    return redirect('/recipe/view/' + recipe_id)

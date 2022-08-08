@@ -55,20 +55,15 @@ class Recipe(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     title = models.CharField(max_length=100)
     user = models.CharField(max_length=50)
-    #url = models.SlugField(max_length=100, unique=True)
     preview = models.ImageField(upload_to='preview/')
-    #preview_text = models.CharField(max_length=255, blank=True)
     text = models.TextField()
     type = models.CharField(max_length=5, choices=TYPE_OF_DISH, default='full')
     complexity = models.CharField(max_length=6, choices=DIFFICULTY_LEVEL, default='normal')
     views = models.IntegerField(default=0)
-    lovers = models.IntegerField(default=0)
+    likes = models.IntegerField(default=0)
 
     def __str__(self):
         return self.user
-
-    #def get_absolute_url(self):
-    #    return reverse('recipe_detail', kwargs={'slug': self.url})
 
     def get_review(self):
         return self.recipereviews_set.filter(parent__isnull=True)
@@ -78,9 +73,9 @@ class Recipe(models.Model):
         verbose_name_plural = 'Рецепты'
 
 
-class LoveRecipe(models.Model):
+class LikeRecipe(models.Model):
     '''Модель отметки понравилось'''
-    recipe_url = models.CharField(max_length=100)
+    recipe_id = models.CharField(max_length=100)
     username = models.CharField(max_length=100)
 
     def __str__(self):
