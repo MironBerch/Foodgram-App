@@ -13,8 +13,7 @@
         <img src='{{ recipe.preview.url }}'>
         <p>{{ recipe.text }}</p>
     </div>
-    <a href="/recipe/like_recipe?recipe_id={{recipe.id}}" class="btn btn-primary">Like</a>
+    <a href='/recipe/like_recipe?recipe_id={{recipe.id}}' class='btn btn-primary'>Like</a>
     <span>Liked by {{ recipe.likes }} person</span>
 </div>
-
 {% endblock %}
