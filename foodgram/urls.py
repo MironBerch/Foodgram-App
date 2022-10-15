@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include
 from foodgram.views import index
 
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', include('django.contrib.auth.urls')),
+    path('singup/', index, name='index'),
 ]
