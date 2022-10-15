@@ -23,8 +23,8 @@ class Recipe(models.Model):
     publication_date = models.DateTimeField(
         auto_now_add=True, verbose_name='Publication_date'
     )
-    tags = MultiSelectField(
-        choices=TAG_CHOICES, blank=True, null=True, verbose_name='Tags'
+    tags = models.CharField(
+        max_length=50, choices=TAG_CHOICES, blank=True, null=True, verbose_name='Tags'
     )
     description = models.TextField(
         blank=True, null=True, verbose_name='Description'
@@ -38,7 +38,7 @@ class Recipe(models.Model):
         return self.title
 
     class Meta:
-        odering = ['-publication_date']
+        ordering = ['-publication_date']
         verbose_name = 'Recipe'
         verbose_name_plural = 'Recipes'
 
