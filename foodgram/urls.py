@@ -3,6 +3,6 @@ from foodgram.views import index
 
 
 urlpatterns = [
-    path('', include('django.contrib.auth.urls')),
-    path('singup/', index, name='index'),
+    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/singup/', index, name='index'),
 ]
