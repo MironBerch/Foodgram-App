@@ -4,7 +4,7 @@ from functools import reduce
 import operator
 
 
-def get_catalog(request):
+def tag_collect(request):
     """Collect tags for recipe filter on page"""
     tags = []
     for label, _ in TAG_CHOICES:

@@ -1,7 +1,6 @@
-from dataclasses import field
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from foodgram.forms import Recipe
+from foodgram.models import Recipe
 from django.forms import ModelForm
 
 
