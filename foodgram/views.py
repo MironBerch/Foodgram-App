@@ -1,3 +1,5 @@
+from itertools import count
+import re
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -117,7 +119,52 @@ def new_recipe(request):
 
 @login_required
 def edit_recipe(request, username, recipe_id):
-    pass
+    form_title = 'Редактирование рецепта'
+    btn_caption = 'Сохранить'
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    user = get_object_or_404(User, username=username)
+    recipe_redirect = redirect(
+        'recipe', username=user.username, recipe_id=recipe_id
+    )
+    is_breakfast = 'breakfast' in recipe.tags
+    is_lunch = 'lunch' in recipe.tags
+    is_dinner = 'dinner' in recipe.tags
+    ingredients = RecipeIngredient.objects.filter(recipe_id=recipe_id)
+
+    if request.user != user:
+        return recipe_redirect
+    form = RecipeForm(request.POST or None, files=request.FILES or None, instance=recipe)
+
+    if request.method == 'POST' and form.is_valid():
+        ingredients_names = request.POST.getlist('nameIngredient')
+        ingredients_values = request.POST.getlist('valueIngredient')
+        if len(ingredients_names) == len(ingredients_values):
+            count = len(ingredients_names)
+        else:
+            return redirect('edit_recipe', username=username, recipe_id=recipe_id)
+
+        form.save()
+            
+        RecipeIngredient.objects.filter(recipe_id=recipe.id).delete()
+
+        for recipe_ingredient in range(count):
+            RecipeIngredient.add_ingredient(
+                RecipeIngredient, recipe.id, ingredients_names[recipe_ingredient], ingredients_values[recipe_ingredient]
+            )
+        return recipe_redirect
+
+    context = {
+        'form_title': form_title,
+        'btn_caption': btn_caption,
+        'form': form,
+        'recipe': recipe,
+        'is_breakfast': is_breakfast,
+        'is_lunch': is_lunch,
+        'is_dinner': is_dinner,
+        'ingredients': ingredients,
+    }
+
+    return render(request, 'form_recipe.html', context)
 
 
 @login_required
