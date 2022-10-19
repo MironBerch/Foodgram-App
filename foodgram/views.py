@@ -15,7 +15,7 @@ class SignUp(CreationForm):
     """SignUp view class"""
     form_class = CreationForm
     success_url = reverse_lazy('login')
-    template_name = 'signup.html'
+    template_name = 'foodgram/signup.html'
 
 
 def index(request):
@@ -36,7 +36,7 @@ def index(request):
         'tags': tags,
     }
 
-    return render(request, 'index.html', context)
+    return render(request, 'foodgram/index.html', context)
 
 
 def user_page(request, username):
@@ -59,7 +59,7 @@ def user_page(request, username):
         'author': author,
     }
 
-    return render(request, 'recipe_page.html', context)
+    return render(request, 'foodgram/recipe_page.html', context)
 
 
 @login_required()
@@ -77,7 +77,7 @@ def feed(request):
         'paginator': paginator,
     }
 
-    return render(request, 'feed.html', context)
+    return render(request, 'foodgram/feed.html', context)
 
 
 @login_required
@@ -114,7 +114,7 @@ def new_recipe(request):
         'form': form,
     }
 
-    return render(request, 'form_recipe.html', context)
+    return render(request, 'foodgram/form_recipe.html', context)
 
 
 @login_required
@@ -164,7 +164,7 @@ def edit_recipe(request, username, recipe_id):
         'ingredients': ingredients,
     }
 
-    return render(request, 'form_recipe.html', context)
+    return render(request, 'foodgram/form_recipe.html', context)
 
 
 @login_required
@@ -190,7 +190,7 @@ def favorites(request):
         'tags': tags,
     }
 
-    return render(request, 'favorites.html', context)
+    return render(request, 'foodgram/favorites.html', context)
 
 
 @login_required
@@ -205,7 +205,7 @@ def wishlist(request):
         'recipes': recipes,
     }
 
-    return render(request, 'wishlist.html', context)
+    return render(request, 'foodgram/wishlist.html', context)
 
 
 def page_not_found(request, exception):
