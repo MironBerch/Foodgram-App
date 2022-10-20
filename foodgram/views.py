@@ -1,5 +1,3 @@
-from itertools import count
-import re
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import CreateView
 from django.urls import reverse_lazy
@@ -11,11 +9,11 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 
 
-class SignUp(CreationForm):
+class SignUp(CreateView):
     """SignUp view class"""
     form_class = CreationForm
     success_url = reverse_lazy('login')
-    template_name = 'foodgram/signup.html'
+    template_name = 'registration/signup.html'
 
 
 def index(request):
