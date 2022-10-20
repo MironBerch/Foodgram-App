@@ -59,6 +59,22 @@ def user_page(request, username):
         'author': author,
     }
 
+    return render(request, 'foodgram/user_page.html', context)
+
+
+def recipe_page(request, username, recipe_id):
+    author = get_object_or_404(User, username=username)
+    recipe = get_object_or_404(
+        Recipe, id=recipe_id, author_id=author.id
+    )
+    ingredients = RecipeIngredient.objects.filter(recipe_id=recipe_id)
+
+    context = {
+        'author': author,
+        'recipe': recipe,
+        'ingredients': ingredients,
+    }
+    
     return render(request, 'foodgram/recipe_page.html', context)
 
 
