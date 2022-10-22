@@ -1,5 +1,5 @@
-from atexit import register
 from django import template
+#from urllib.parse import urlencode
 
 
 register = template.Library()
@@ -18,7 +18,7 @@ def set_tags(request, tags, value):
     else:
         request_object[value] = 'tag'
 
-    return request_object.urlecode()
+    return request_object.urlencode()
 
 
 @register.simple_tag
@@ -27,4 +27,4 @@ def set_page(request, value):
     request_object = request.GET.copy()
     request_object['page'] = value
     
-    return request_object.urlecode()
+    return request_object.urlencode()
