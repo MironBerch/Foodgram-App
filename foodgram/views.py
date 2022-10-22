@@ -3,7 +3,7 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from foodgram.forms import CreationForm, RecipeForm
 from foodgram.helper import tag_collect
-from foodgram.models import Recipe, RecipeIngredient
+from foodgram.models import Recipe, RecipeIngredient, Favorites
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -42,9 +42,9 @@ def user_page(request, username):
     author = get_object_or_404(User, username=username)
     tags, tags_filter = tag_collect(request)
     if tags_filter:
-        recipe = Recipe.objects.filter(tags_filter).filter(author_id=author.id).all()
+        recipes = Recipe.objects.filter(tags_filter).filter(author_id=author.id).all()
     else:
-        recipes = Paginator(recipes, 6)
+        recipes = Recipe.objects.filter(author_id=author.id)
     
     paginator = Paginator(recipes, 6)
     page_number = request.GET.get('page')
@@ -118,8 +118,9 @@ def new_recipe(request):
                 RecipeIngredient.add_ingredient(
                     RecipeIngredient, new_recipe.id, ingredients_names[ingredient], ingredients_values[ingredient]
                 )
+
             return redirect('index')
-    
+        return redirect('index')
     form = RecipeForm()
 
     context = {
@@ -208,6 +209,19 @@ def favorites(request):
 
 
 @login_required
+def add_to_favorite(request, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    favorite = Favorites.objects.filter(user=request.user, recipe=recipe)
+
+    if not favorite:
+        favorite.create(user=request.user, recipe=recipe)
+    else:
+        favorite.delete()
+
+    return redirect('recipe', recipe_id=recipe_id, username=recipe.author)
+
+
+@login_required
 def wishlist(request):
     """Return user recipes"""
     user = request.user
@@ -230,5 +244,5 @@ def server_error(request):
     return render(request, "misc/500.html", status=500)
 
 
-def password_reset(request):
-    return render(request, 'password_reset_form')
+def download_wishlist(request):
+    return redirect('wishlist')

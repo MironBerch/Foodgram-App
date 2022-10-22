@@ -9,7 +9,7 @@
 {% block content %}
 <div class="main__header">
     <h1 class="main__title">{{ author.get_full_name }}</h1>
-    {% include 'components/tags.html' %}
+    {% include 'foodgram/components/tags.html' %}
 </div>
 
 {% csrf_token %}
@@ -30,12 +30,12 @@
 
 <div class="card-list">
     {% for recipe in page %}
-        {% include 'components/recipe.html' %}
+        {% include 'foodgram/components/recipe.html' %}
     {% endfor %}
 </div>
 
 {% if page.has_other_pages %}
-    % include "components/paginator.html" with items=page paginator=paginator %}
+    % include "foodgram/components/paginator.html" with items=page paginator=paginator %}
 {% endif %}
 
 {% endblock %}

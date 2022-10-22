@@ -20,13 +20,14 @@
             <h1 class="single-card__title">{{ recipe.title }}</h1>
             <div class="single-card__favorite">
                 {% if request.user.is_authenticated %}
-                    {% if recipe|check_favorite:request.user %}
-                        <button class="button button_style_none" name="favorites"><span
-                                class="icon-favorite icon-favorite_big  icon-favorite_active"></span></button>
-                    {% else %}
-                        <button class="button button_style_none" name="favorites" data-out><span
-                                class="icon-favorite icon-favorite_big"></span></button>
-                    {% endif %}
+                    <form action='add_to_favorite' method='POST'>
+                        {% csrf_token %}
+                        {% if recipe|check_favorite:request.user %}
+                        <a href="{% url 'add_to_favorite' recipe.id %}"><button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_big  icon-favorite_active"></span></button></a>
+                        {% else %}
+                        <a href="{% url 'add_to_favorite' recipe.id %}"><button class="button button_style_none" name="favorites" data-out><span class="icon-favorite icon-favorite_big"></span></button></a>
+                        {% endif %}
+                    </form>
                 {% endif %}
                 <div class="single-card__favorite-tooltip tooltip">Добавить в избранное</div>
             </div>
@@ -35,38 +36,32 @@
             {% load add_class %}
             {% load get_tag_value %}
             {% for tag in recipe.tags %}
-                <li class="single-card__item"><span class="{{ tag|class_tag }}">{{ tag|get_tag_value }}</span></li>
+            <li class="single-card__item"><span class="{{ tag|class_tag }}">{{ tag|get_tag_value }}</span></li>
             {% endfor %}
         </ul>
         <div class="single-card__items single-card__items_column">
             <p class="single-card__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
             <ul class="single-card__items">
                 <li class="single-card__item">
-                    <p class="single-card__text"><span class="icon-user"></span><a href="{% url 'user' recipe.author.username %}"
-                        style="color: black"> {{ recipe.author.get_full_name }}</a></p>
+                    <p class="single-card__text"><span class="icon-user"></span><a href="{% url 'user' recipe.author.username %}" style="color: black"> {{ recipe.author.get_full_name }}</a></p>
                 </li>
                 {% if request.user == recipe.author %}
-                    <li class="single-card__item"> <a style="margin-left: 2.5em" href="{% url 'edit_recipe' recipe.author.username recipe.id %}"
-                            class="single-card__text">Редактировать рецепт</a></li>
+                    <li class="single-card__item"> <a style="margin-left: 2.5em" href="{% url 'edit_recipe' recipe.author.username recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
                 {% endif %}
             </ul>
         </div>
         {% if request.user.is_authenticated %}
         <ul class="single-card__items">
                 {% if recipe|check_wishlist:request.user %}
-                    <li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchases"><span
-                                class="icon-check"></span>Рецепт добавлен</button></li>
+                    <li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check"></span>Рецепт добавлен</button></li>
                 {% else %}
-                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span
-                                class="icon-plus"></span>Добавить в покупки</button></li>
+                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span>Добавить в покупки</button></li>
                 {% endif %}
                 {% if request.user != recipe.author %}
                     {% if recipe.author|check_subscription:request.user %}
-                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe"
-                                name="subscribe">Отписаться от автора</button></li>
+                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></li>
                     {% else %}
-                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe"
-                                name="subscribe" data-out>Подписаться на автора</button></li>
+                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
                     {% endif %}
                 {% endif %}
             </ul>

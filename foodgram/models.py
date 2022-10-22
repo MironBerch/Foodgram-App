@@ -23,8 +23,8 @@ class Recipe(models.Model):
     publication_date = models.DateTimeField(
         auto_now_add=True, verbose_name='Publication_date'
     )
-    tags = models.CharField(
-        max_length=50, choices=TAG_CHOICES, blank=True, null=True, verbose_name='Tags'
+    tags = MultiSelectField(
+        max_length=50, choices=TAG_CHOICES, blank=True, null=True, verbose_name='Tags', max_choices=3
     )
     description = models.TextField(
         blank=True, null=True, verbose_name='Description'

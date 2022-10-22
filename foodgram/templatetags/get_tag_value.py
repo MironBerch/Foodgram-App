@@ -1,4 +1,3 @@
-from atexit import register
 from django import template
 from foodgram.models import TAG_CHOICES
 
