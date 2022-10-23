@@ -53,7 +53,7 @@
                         <div class="form__dropdown-items"></div>
                     </div>
                     <input type="number" id="cantidad" class="form__input" min="0">
-                    <label for="cantidad" class="form__label" id="cantidadVal">шт.</label>
+                    <label for="cantidad" class="form__label" id="cantidadVal">кол-во.</label>
                 </div>
                 <div class="form__field-group-ingredientes-container">
                     {% if ingredients %}
@@ -70,7 +70,7 @@
                                 <input id="unitsIngredient_{{ ingredient.ingredient.id }}"
                                     name="unitsIngredient" type="hidden"
                                     value="{{ ingredient.ingredient.dimension }}">
-                        </div>
+                            </div>
                         {% endfor %}
                     {% endif %}
                 </div>

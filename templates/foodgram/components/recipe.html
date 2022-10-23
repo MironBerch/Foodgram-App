@@ -19,8 +19,7 @@
         </ul>
         <div class="card__items card__items_column">
             <p class="card__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
-            <p class="card__text"><span class="icon-user"></span> <a href="{% url 'user' recipe.author.username %}"
-                    style="color: black">{{ recipe.author.get_full_name }}</a></p>
+            <p class="card__text"><span class="icon-user"></span> <a href="{% url 'user' recipe.author.username %}" style="color: black">{{ recipe.author.get_full_name }}</a></p>
         </div>
     </div>
 
@@ -28,19 +27,15 @@
         {% load check_atribute %}
         <div class="card__footer">
             {% if recipe|check_wishlist:request.user %}
-                <button class="button button_style_light-blue-outline" name="purchases"><span
-                        class="icon-check button__icon"></span>Рецепт добавлен</button>
+                <a href="{% url 'add_wishlist' recipe.author.username recipe.id %}"><button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check button__icon"></span>Рецепт добавлен</button></a>
             {% else %}
-                <button class="button button_style_light-blue" name="purchases" data-out><span
-                        class="icon-plus button__icon"></span>Добавить в покупки</button>
+                <a href="{% url 'add_wishlist' recipe.author.username recipe.id %}"><button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button></a>
             {% endif %}
 
             {% if recipe|check_favorite:request.user %}
-                <button class="button button_style_none" name="favorites"><span
-                        class="icon-favorite icon-favorite_active"></span></button>
+            <a href="{% url 'add_to_favorite' recipe.id %}"><button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button></a>
             {% else %}
-                <button class="button button_style_none" name="favorites" data-out><span
-                        class="icon-favorite"></span></button>
+            <a href="{% url 'add_to_favorite' recipe.id %}"><button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button></a>
             {% endif %}
         </div>
     {% endif %}

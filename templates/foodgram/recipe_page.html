@@ -53,9 +53,9 @@
         {% if request.user.is_authenticated %}
         <ul class="single-card__items">
                 {% if recipe|check_wishlist:request.user %}
-                    <li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check"></span>Рецепт добавлен</button></li>
+                    <a href="{% url 'add_wishlist' recipe.author.username recipe.id %}"><li class="single-card__item"><button class="button button_style_light-blue-outline" name="purchases"><span class="icon-check"></span>Рецепт добавлен</button></li></a>
                 {% else %}
-                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span>Добавить в покупки</button></li>
+                    <a href="{% url 'add_wishlist' recipe.author.username recipe.id %}"><li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span>Добавить в покупки</button></li></a>
                 {% endif %}
                 {% if request.user != recipe.author %}
                     {% if recipe.author|check_subscription:request.user %}

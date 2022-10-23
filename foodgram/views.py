@@ -3,7 +3,7 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from foodgram.forms import CreationForm, RecipeForm
 from foodgram.helper import tag_collect
-from foodgram.models import Recipe, RecipeIngredient, Favorites
+from foodgram.models import Recipe, RecipeIngredient, Favorites, Wishlist
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -183,6 +183,17 @@ def edit_recipe(request, username, recipe_id):
 
 
 @login_required
+def remove_recipe(request, username, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id, recipe_author=username)
+    if username==request.user:
+        if Recipe.objects.filter(recipe=recipe, recipe_author=username).exists():
+            recipe.delete()
+            return redirect('index')
+        else:
+            return redirect('edit_recipe', username=username, recipe_id=recipe_id)
+
+
+@login_required
 def favorites(request):
     user = request.user
     tags, tags_filter = tag_collect(request)
@@ -234,6 +245,21 @@ def wishlist(request):
     }
 
     return render(request, 'foodgram/wishlist.html', context)
+
+
+@login_required
+def add_wishlist(request, username, recipe_id):
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    wishlist_recipe = Wishlist.objects.filter(user=request.user, recipe=recipe)
+
+    if not wishlist_recipe:
+        wishlist_recipe.create(user=request.user, recipe=recipe)
+    else:
+        wishlist_recipe.delete()
+
+    #return redirect('index')
+    return redirect('recipe', recipe_id=recipe_id, username=recipe.author)
+
 
 
 def page_not_found(request, exception):

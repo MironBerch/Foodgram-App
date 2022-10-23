@@ -1,5 +1,5 @@
 from django.urls import path, include
-from foodgram.views import SignUp, index, user_page, feed, recipe_page, new_recipe, edit_recipe, favorites, wishlist, download_wishlist, add_to_favorite
+from foodgram.views import SignUp, index, user_page, feed, recipe_page, new_recipe, edit_recipe, favorites, wishlist, download_wishlist, add_to_favorite, remove_recipe, add_wishlist
 from django.contrib.auth.views import LoginView, LogoutView
 
 
@@ -14,8 +14,10 @@ urlpatterns = [
     path('favorites', favorites, name='favorites'),
     path('add_to_favorite/<int:recipe_id>', add_to_favorite, name='add_to_favorite'),
     path('wishlist', wishlist, name='wishlist'),
+    path('<str:username>/<int:recipe_id>/remove_recipe', remove_recipe, name='remove_recipe'),
     path('wishlist/download', download_wishlist, name='download_wishlist'),
     path('<str:username>', user_page, name='user'),
     path('<str:username>/<int:recipe_id>', recipe_page, name='recipe'),
+    path('<str:username>/<int:recipe_id>/add_wishlist', add_wishlist, name='add_wishlist'),
     path('<str:username>/<int:recipe_id>/edit', edit_recipe, name='edit_recipe'),
 ]

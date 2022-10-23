@@ -24,7 +24,7 @@
                     <h3 class="recipe__title">{{ recipe.title }}</h3>
                     <p class="recipe__text"><span class="icon-time"></span> {{ recipe.time }} мин.</p>
                 </div>
-                <button class="button shopping-list__button link">Удалить</button>
+                <a href="{% url 'add_wishlist' recipe.author.username recipe.id %}"><button class="button shopping-list__button link">Удалить</button></a>
             </li>
         {% endfor %}
     </ul>
