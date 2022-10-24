@@ -61,15 +61,9 @@
                             <div class="form__field-item-ingredient" id="ing_{{ ingredient.ingredient.id }}"><span>
                                     {{ ingredient.ingredient.title }} {{ ingredient.amount }}
                                     {{ ingredient.ingredient.dimension }}</span> <span class="form__field-item-delete"></span>
-                                <input id="nameIngredient_{{ ingredient.ingredient.id }}"
-                                    name="nameIngredient" type="hidden"
-                                    value="{{ ingredient.ingredient.title }}">
-                                <input id="valueIngredient_{{ ingredient.ingredient.id }}"
-                                    name="valueIngredient" type="hidden"
-                                    value="{{ ingredient.amount }}">
-                                <input id="unitsIngredient_{{ ingredient.ingredient.id }}"
-                                    name="unitsIngredient" type="hidden"
-                                    value="{{ ingredient.ingredient.dimension }}">
+                                <input id="nameIngredient_{{ ingredient.ingredient.id }}" name="nameIngredient" type="hidden" value="{{ ingredient.ingredient.title }}">
+                                <input id="valueIngredient_{{ ingredient.ingredient.id }}" name="valueIngredient" type="hidden" value="{{ ingredient.amount }}">
+                                <input id="unitsIngredient_{{ ingredient.ingredient.id }}" name="unitsIngredient" type="hidden" value="{{ ingredient.ingredient.dimension }}">
                             </div>
                         {% endfor %}
                     {% endif %}

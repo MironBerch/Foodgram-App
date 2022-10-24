@@ -3,10 +3,11 @@ from django.views.generic import CreateView
 from django.urls import reverse_lazy
 from foodgram.forms import CreationForm, RecipeForm
 from foodgram.helper import tag_collect
-from foodgram.models import Recipe, RecipeIngredient, Favorites, Wishlist
+from foodgram.models import Recipe, RecipeIngredient, Favorites, Wishlist, Follow
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 
 class SignUp(CreateView):
@@ -92,6 +93,48 @@ def feed(request):
     }
 
     return render(request, 'foodgram/feed.html', context)
+
+
+@login_required
+def follow(request, username):
+    #subscriber=request.user
+    #following = username
+    #recipe = get_object_or_404(Recipe, id=recipe_id)
+    subscriber = get_object_or_404(User, username=username)
+    follow = Follow.objects.filter(following=request.user, subscriber=username)
+    print(request.user, username)
+    if not follow:
+        follow.create(following=request.user, subscriber=subscriber)
+    else:
+        follow.delete()
+    
+    return redirect('user', username=username)
+
+
+    """
+    #follow = Follow.objects.filter(subscriber=request.user, following=username.id)
+    #follow = get_object_or_create(subscriber=request.user, following=username.id)
+    #if follow:
+
+    if Follow.objects.filter(subscriber=request.user, following=username).exists():
+        delete_follower = Follow.objects.get(subscribe=request.user, following=username)
+        delete_follower.delete()
+    else:
+        create_follower = Follow.objects.create(subscriber=request.user, following=username)
+        create_follower.save()
+    return redirect('user', username=username)
+
+
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+    favorite = Favorites.objects.filter(user=request.user, recipe=recipe)
+
+    if not favorite:
+        favorite.create(user=request.user, recipe=recipe)
+    else:
+        favorite.delete()
+
+    return redirect('recipe', recipe_id=recipe_id, username=recipe.author)
+"""
 
 
 @login_required
@@ -184,13 +227,13 @@ def edit_recipe(request, username, recipe_id):
 
 @login_required
 def remove_recipe(request, username, recipe_id):
-    recipe = get_object_or_404(Recipe, id=recipe_id, recipe_author=username)
-    if username==request.user:
-        if Recipe.objects.filter(recipe=recipe, recipe_author=username).exists():
+    recipe = get_object_or_404(Recipe, id=recipe_id)
+
+    if (recipe.author == request.user) and Recipe.objects.filter(id=recipe_id).exists():
             recipe.delete()
             return redirect('index')
-        else:
-            return redirect('edit_recipe', username=username, recipe_id=recipe_id)
+    else:
+        return redirect('edit_recipe', username=username, recipe_id=recipe_id)
 
 
 @login_required
