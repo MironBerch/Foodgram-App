@@ -97,44 +97,14 @@ def feed(request):
 
 @login_required
 def follow(request, username):
-    #subscriber=request.user
-    #following = username
-    #recipe = get_object_or_404(Recipe, id=recipe_id)
     subscriber = get_object_or_404(User, username=username)
-    follow = Follow.objects.filter(following=request.user, subscriber=username)
-    print(request.user, username)
-    if not follow:
-        follow.create(following=request.user, subscriber=subscriber)
-    else:
+    follow = Follow.objects.filter(subscriber=request.user, following=subscriber)
+    if follow:
         follow.delete()
-    
-    return redirect('user', username=username)
-
-
-    """
-    #follow = Follow.objects.filter(subscriber=request.user, following=username.id)
-    #follow = get_object_or_create(subscriber=request.user, following=username.id)
-    #if follow:
-
-    if Follow.objects.filter(subscriber=request.user, following=username).exists():
-        delete_follower = Follow.objects.get(subscribe=request.user, following=username)
-        delete_follower.delete()
     else:
-        create_follower = Follow.objects.create(subscriber=request.user, following=username)
-        create_follower.save()
+        follow.create(subscriber=request.user, following=subscriber)
+
     return redirect('user', username=username)
-
-
-    recipe = get_object_or_404(Recipe, id=recipe_id)
-    favorite = Favorites.objects.filter(user=request.user, recipe=recipe)
-
-    if not favorite:
-        favorite.create(user=request.user, recipe=recipe)
-    else:
-        favorite.delete()
-
-    return redirect('recipe', recipe_id=recipe_id, username=recipe.author)
-"""
 
 
 @login_required
@@ -302,7 +272,6 @@ def add_wishlist(request, username, recipe_id):
 
     #return redirect('index')
     return redirect('recipe', recipe_id=recipe_id, username=recipe.author)
-
 
 
 def page_not_found(request, exception):
