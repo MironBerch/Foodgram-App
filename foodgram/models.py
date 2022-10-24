@@ -80,16 +80,12 @@ class RecipeIngredient(models.Model):
 class Follow(models.Model):
     """Follow user-follower"""
     follow_id = models.AutoField(auto_created=True, primary_key=True)
-    subscriber = models.ForeignKey(User, on_delete=models.CASCADE, related_name='subscriber')
-    #following = models.ForeignKey(
-    #    User, on_delete=models.CASCADE, related_name='following'
-    #)
-    #subscriber = models.ForeignKey(
-    #    User, on_delete=models.CASCADE, related_name='subscriber'
-    #)
-    #following = models.ForeignKey(
-    #    User, on_delete=models.CASCADE, related_name='following'
-    #)
+    subscriber = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='subscriber'
+    )
+    following = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='following'
+    )
 
 
 class Favorites(models.Model):
