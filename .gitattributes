@@ -1,0 +1,4 @@
+static/* linguist-vendored
+*.html linguist-language=false
+*.css linguist-language=false
+*.js linguist-language=false
