@@ -1,5 +1,5 @@
 # Foodgram-App [![made-with-python](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
-create at 04.08.22 i create only backend
+create at 04.08.22
 ## Technology stack:
 Python 3, Django 4
 ## Steps to be followed for first time use
