@@ -1,4 +1,4 @@
 static/* linguist-vendored
-*.html linguist-language=false
-*.css linguist-language=false
-*.js linguist-language=false
+*.html linguist-detectable=false
+*.css linguist-detectable=false
+*.js linguist-detectable=false
